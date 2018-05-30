@@ -4,7 +4,7 @@ import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 
-import com.sdwfqin.cbt.Utils.CbtLogs;
+import com.sdwfqin.cbt.utils.CbtLogs;
 import com.sdwfqin.cbt.callback.BaseConfigCallback;
 import com.sdwfqin.cbt.callback.ScanCallback;
 import com.sdwfqin.cbt.callback.StateSwitchCallback;

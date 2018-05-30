@@ -1,4 +1,4 @@
-package com.sdwfqin.cbt.Utils;
+package com.sdwfqin.cbt.utils;
 
 import android.annotation.SuppressLint;
 import android.content.pm.PackageInfo;

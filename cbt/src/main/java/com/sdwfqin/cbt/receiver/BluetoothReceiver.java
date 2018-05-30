@@ -9,7 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-import com.sdwfqin.cbt.Utils.CbtLogs;
+import com.sdwfqin.cbt.utils.CbtLogs;
 import com.sdwfqin.cbt.callback.BaseConfigCallback;
 import com.sdwfqin.cbt.model.DeviceModel;
 
