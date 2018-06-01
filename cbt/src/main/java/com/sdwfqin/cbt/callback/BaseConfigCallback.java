@@ -26,4 +26,6 @@ public interface BaseConfigCallback {
      * @param deviceModel
      */
     void onFindDevice(DeviceModel deviceModel);
+
+    void onConn(int conn_type);
 }
