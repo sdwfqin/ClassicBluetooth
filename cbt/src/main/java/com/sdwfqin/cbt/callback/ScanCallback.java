@@ -1,6 +1,6 @@
 package com.sdwfqin.cbt.callback;
 
-import com.sdwfqin.cbt.model.DeviceModel;
+import android.bluetooth.BluetoothDevice;
 
 import java.util.List;
 
@@ -23,12 +23,12 @@ public interface ScanCallback {
     /**
      * 搜索结束
      */
-    void onScanStop(List<DeviceModel> deviceList);
+    void onScanStop(List<BluetoothDevice> deviceList);
 
     /**
      * 发现新设备
      *
-     * @param deviceModel
+     * @param device
      */
-    void onFindDevice(DeviceModel deviceModel);
+    void onFindDevice(BluetoothDevice device);
 }

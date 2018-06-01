@@ -1,6 +1,6 @@
 package com.sdwfqin.cbt.callback;
 
-import com.sdwfqin.cbt.model.DeviceModel;
+import android.bluetooth.BluetoothDevice;
 
 /**
  * 描述：蓝牙广播回调
@@ -23,9 +23,15 @@ public interface BaseConfigCallback {
     /**
      * 发现新设备
      *
-     * @param deviceModel
+     * @param device
      */
-    void onFindDevice(DeviceModel deviceModel);
+    void onFindDevice(BluetoothDevice device);
 
-    void onConn(int conn_type);
+    /**
+     * 连接设备
+     *
+     * @param state
+     * @param device
+     */
+    void onConnect(int state, BluetoothDevice device);
 }

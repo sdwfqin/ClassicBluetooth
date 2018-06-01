@@ -1,6 +1,6 @@
 package com.sdwfqin.cbt.callback;
 
-import com.sdwfqin.cbt.model.DeviceModel;
+import android.bluetooth.BluetoothDevice;
 
 /**
  * 创建时间: 2018/5/31
@@ -10,15 +10,18 @@ import com.sdwfqin.cbt.model.DeviceModel;
  * 描述: GetConnectDevice 获取连接设备
  **/
 public interface ConnectDeviceCallBack {
-    /**
-     * 获取设备信息
-     * @return
-     */
-    DeviceModel getConnectDevice();
 
     /**
      * 连接状态
-     * @param conn
+     *
+     * @param device
      */
-    void connectDevice(int conn);
+    void connectSuccess(BluetoothDevice device);
+
+    /**
+     * 连接失败
+     *
+     * @param device
+     */
+    void connectError(BluetoothDevice device);
 }

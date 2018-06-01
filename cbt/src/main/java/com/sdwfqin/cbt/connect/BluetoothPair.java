@@ -16,11 +16,13 @@ import java.io.IOException;
  * 描述: ConnectThread  配对蓝牙
  **/
 public class BluetoothPair extends Thread {
+
     private final BluetoothSocket mmSocket;
     private final BluetoothDevice mmDevice;
     private BluetoothAdapter mBluetoothAdapter;
+
     public BluetoothPair(BluetoothAdapter mBluetoothAdapter, BluetoothDevice device) {
-        this.mBluetoothAdapter= mBluetoothAdapter;
+        this.mBluetoothAdapter = mBluetoothAdapter;
         mmDevice = device;
         BluetoothSocket tmp = null;
         try {
@@ -34,7 +36,7 @@ public class BluetoothPair extends Thread {
 
     @Override
     public void run() {
-        if(mBluetoothAdapter.isDiscovering()){
+        if (mBluetoothAdapter.isDiscovering()) {
             mBluetoothAdapter.cancelDiscovery();
         }
         try {
@@ -44,7 +46,7 @@ public class BluetoothPair extends Thread {
         }
     }
 
-    public void cancel(){
+    public void cancel() {
         try {
             mmSocket.close();
         } catch (IOException e) {
