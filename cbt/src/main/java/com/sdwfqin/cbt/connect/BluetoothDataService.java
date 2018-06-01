@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
 import com.sdwfqin.cbt.utils.CbtConstant;
+import com.sdwfqin.cbt.utils.CbtLogs;
 
 import java.io.IOException;
 
@@ -15,23 +16,23 @@ import java.io.IOException;
  * Blog: www.xiaohoutongxue.cn
  * 描述: ConnectThread  配对蓝牙
  **/
-public class BluetoothPair extends Thread {
+public class BluetoothDataService extends Thread {
 
-    private final BluetoothSocket mmSocket;
-    private final BluetoothDevice mmDevice;
+    private final BluetoothSocket mBluetoothSocket;
+    private final BluetoothDevice mBluetoothDevice;
     private BluetoothAdapter mBluetoothAdapter;
 
-    public BluetoothPair(BluetoothAdapter mBluetoothAdapter, BluetoothDevice device) {
+    public BluetoothDataService(BluetoothAdapter mBluetoothAdapter, BluetoothDevice device) {
         this.mBluetoothAdapter = mBluetoothAdapter;
-        mmDevice = device;
+        mBluetoothDevice = device;
         BluetoothSocket tmp = null;
         try {
             //尝试建立安全的连接
-            tmp = mmDevice.createRfcommSocketToServiceRecord(CbtConstant.MY_UUID);
+            tmp = mBluetoothDevice.createRfcommSocketToServiceRecord(CbtConstant.CBT_UUID);
         } catch (IOException e) {
-            e.printStackTrace();
+            CbtLogs.e(e.getMessage());
         }
-        mmSocket = tmp;
+        mBluetoothSocket = tmp;
     }
 
     @Override
@@ -40,17 +41,22 @@ public class BluetoothPair extends Thread {
             mBluetoothAdapter.cancelDiscovery();
         }
         try {
-            mmSocket.connect();
+            mBluetoothSocket.connect();
         } catch (IOException e) {
+            CbtLogs.e(e.getMessage());
             return;
         }
     }
 
+    public BluetoothSocket getBluetoothSocket() {
+        return mBluetoothSocket;
+    }
+
     public void cancel() {
         try {
-            mmSocket.close();
+            mBluetoothSocket.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            CbtLogs.e(e.getMessage());
         }
     }
 }

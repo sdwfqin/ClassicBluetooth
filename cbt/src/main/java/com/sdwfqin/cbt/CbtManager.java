@@ -9,7 +9,7 @@ import com.sdwfqin.cbt.callback.BaseConfigCallback;
 import com.sdwfqin.cbt.callback.ConnectDeviceCallBack;
 import com.sdwfqin.cbt.callback.ScanCallback;
 import com.sdwfqin.cbt.callback.StateSwitchCallback;
-import com.sdwfqin.cbt.connect.BluetoothPair;
+import com.sdwfqin.cbt.connect.BluetoothDataService;
 import com.sdwfqin.cbt.receiver.BluetoothReceiver;
 import com.sdwfqin.cbt.utils.CbtLogs;
 
@@ -30,10 +30,10 @@ public class CbtManager implements BaseConfigCallback {
 
     private StateSwitchCallback mStateSwitchCallback;
     private ScanCallback mScanCallback;
+    private ConnectDeviceCallBack mConnCallBack;
 
     private List<BluetoothDevice> mDeviceList = new ArrayList<>();
-    private ConnectDeviceCallBack mConnCallBack;
-    private BluetoothPair mBluetoothPair;
+    private BluetoothDataService mBluetoothDataService;
 
     public static CbtManager getInstance() {
         return CbtManagerHolder.sBleManager;
@@ -72,8 +72,10 @@ public class CbtManager implements BaseConfigCallback {
     }
 
     @Override
-    public void onConnect(int state, BluetoothDevice device) {
-
+    public void onConnect(BluetoothDevice device) {
+        if (mConnCallBack == null)
+            return;
+        mConnCallBack.connectSuccess(mBluetoothDataService.getBluetoothSocket(), device);
     }
 
     private static class CbtManagerHolder {
@@ -159,7 +161,7 @@ public class CbtManager implements BaseConfigCallback {
     }
 
     /**
-     * 设备配对
+     * 设备连接
      *
      * @param callBack
      */
@@ -167,8 +169,8 @@ public class CbtManager implements BaseConfigCallback {
         mConnCallBack = callBack;
         if (mBluetoothAdapter != null) {
             //配对蓝牙
-            mBluetoothPair = new BluetoothPair(mBluetoothAdapter, device);
-            mBluetoothPair.start();
+            mBluetoothDataService = new BluetoothDataService(mBluetoothAdapter, device);
+            mBluetoothDataService.start();
         }
     }
 
@@ -176,8 +178,8 @@ public class CbtManager implements BaseConfigCallback {
      * 关闭服务
      */
     public void onDestroy() {
-        if (mBluetoothPair != null) {
-            mBluetoothPair.cancel();
+        if (mBluetoothDataService != null) {
+            mBluetoothDataService.cancel();
         }
         mContext.unregisterReceiver(mBluetoothReceiver);
     }

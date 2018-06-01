@@ -30,8 +30,7 @@ public interface BaseConfigCallback {
     /**
      * 连接设备
      *
-     * @param state
      * @param device
      */
-    void onConnect(int state, BluetoothDevice device);
+    void onConnect(BluetoothDevice device);
 }

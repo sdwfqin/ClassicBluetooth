@@ -1,14 +1,14 @@
 package com.sdwfqin.cbt.callback;
 
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 
 /**
- * 创建时间: 2018/5/31
- * 作者: xiaoHou
- * E-mail: 605322850@qq.com
- * Blog: www.xiaohoutongxue.cn
- * 描述: GetConnectDevice 获取连接设备
- **/
+ * 描述：连接设备
+ *
+ * @author zhangqin
+ * @date 2018/6/1
+ */
 public interface ConnectDeviceCallBack {
 
     /**
@@ -16,12 +16,5 @@ public interface ConnectDeviceCallBack {
      *
      * @param device
      */
-    void connectSuccess(BluetoothDevice device);
-
-    /**
-     * 连接失败
-     *
-     * @param device
-     */
-    void connectError(BluetoothDevice device);
+    void connectSuccess(BluetoothSocket socket, BluetoothDevice device);
 }

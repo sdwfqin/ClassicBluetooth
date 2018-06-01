@@ -43,6 +43,8 @@ public class BluetoothReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
+        BluetoothDevice dev;
+        int state;
         if (action == null)
             return;
         switch (action) {
@@ -54,7 +56,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
              * int STATE_TURNING_ON = 11; //蓝牙正在打开
              */
             case BluetoothAdapter.ACTION_STATE_CHANGED:
-                int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
+                state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
                 mCallback.onStateSwitch(state);
                 break;
             /**
@@ -74,7 +76,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
              * 发现新设备
              */
             case BluetoothDevice.ACTION_FOUND:
-                BluetoothDevice dev = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                dev = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 mCallback.onFindDevice(dev);
                 break;
             /**
@@ -84,9 +86,8 @@ public class BluetoothReceiver extends BroadcastReceiver {
              * int BOND_BONDED = 12; //配对成功
              */
             case BluetoothDevice.ACTION_BOND_STATE_CHANGED:
-                BluetoothDevice devP = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                int stateP = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, 0);
-                mCallback.onConnect(stateP, devP);
+                dev = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                CbtLogs.i("设备配对状态改变：" + dev.getBondState());
                 break;
             /**
              * 设备建立连接
@@ -96,14 +97,15 @@ public class BluetoothReceiver extends BroadcastReceiver {
              */
             case BluetoothDevice.ACTION_ACL_CONNECTED:
                 dev = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                CbtLogs.i("BluetoothDevice: " + dev.getName() + ", " + dev.getAddress());
+                CbtLogs.i("设备建立连接：" + dev.getBondState());
+                mCallback.onConnect(dev);
                 break;
             /**
              * 设备断开连接
              */
             case BluetoothDevice.ACTION_ACL_DISCONNECTED:
                 dev = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                CbtLogs.i("BluetoothDevice: " + dev.getName() + ", " + dev.getAddress());
+                // mCallback.onConnect(dev.getBondState(), dev);
                 break;
             /**
              * 本地蓝牙适配器

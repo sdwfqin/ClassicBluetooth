@@ -10,5 +10,5 @@ import java.util.UUID;
  * 描述: Constant
  **/
 public class CbtConstant {
-    public static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+    public static final UUID CBT_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 }
