@@ -2,11 +2,15 @@ package com.sdwfqin.cbt;
 
 import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.util.Log;
 
+import com.sdwfqin.cbt.callback.ConnectDeviceCallBack;
+import com.sdwfqin.cbt.callback.ScanCallback;
+import com.sdwfqin.cbt.connect.BluetoothPair;
 import com.sdwfqin.cbt.utils.CbtLogs;
 import com.sdwfqin.cbt.callback.BaseConfigCallback;
-import com.sdwfqin.cbt.callback.ScanCallback;
 import com.sdwfqin.cbt.callback.StateSwitchCallback;
 import com.sdwfqin.cbt.model.DeviceModel;
 import com.sdwfqin.cbt.receiver.BluetoothReceiver;
@@ -22,6 +26,7 @@ import java.util.List;
  */
 public class CbtManager implements BaseConfigCallback {
 
+    private static final String TAG = "BaseConfigCallback";
     private Application mContext;
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothReceiver mBluetoothReceiver;
@@ -30,6 +35,9 @@ public class CbtManager implements BaseConfigCallback {
     private ScanCallback mScanCallback;
 
     private List<DeviceModel> mDeviceList = new ArrayList<>();
+    private ConnectDeviceCallBack mConnCallBack;
+    private BluetoothPair mBluetoothPair;
+    private BluetoothDevice btDev;
 
     public static CbtManager getInstance() {
         return CbtManagerHolder.sBleManager;
@@ -57,7 +65,6 @@ public class CbtManager implements BaseConfigCallback {
     public void onFindDevice(DeviceModel deviceModel) {
         if (mScanCallback == null)
             return;
-
         // 排除相同设备
         for (int i = 0; i < mDeviceList.size(); i++) {
             if (deviceModel.getAddress().equals(mDeviceList.get(i).getAddress())) {
@@ -66,6 +73,12 @@ public class CbtManager implements BaseConfigCallback {
         }
         mScanCallback.onFindDevice(deviceModel);
         mDeviceList.add(deviceModel);
+    }
+
+    @Override
+    public void onConn(int conn_type) {
+        mConnCallBack.connectDevice(conn_type);
+
     }
 
     private static class CbtManagerHolder {
@@ -145,12 +158,32 @@ public class CbtManager implements BaseConfigCallback {
         if (mBluetoothAdapter != null) {
             mScanCallback.onScanStart(mBluetoothAdapter.startDiscovery());
         }
+
     }
 
+    /**
+     * 设备配对
+     * @param callBack
+     */
+    public void pair(ConnectDeviceCallBack callBack){
+        mConnCallBack = callBack;
+        DeviceModel deviceModel = mConnCallBack.getConnectDevice();
+        if (deviceModel!=null){
+            btDev = mBluetoothAdapter.getRemoteDevice(deviceModel.getAddress());
+            Log.e(TAG, btDev.getName()+"---->"+ btDev.getAddress());
+            //配对蓝牙
+            mBluetoothPair = new BluetoothPair(mBluetoothAdapter, btDev);
+            mBluetoothPair.start();
+
+        }
+    }
     /**
      * 关闭服务
      */
     public void onDestroy() {
+        if (mBluetoothPair!=null) {
+            mBluetoothPair.cancel();
+        }
         mContext.unregisterReceiver(mBluetoothReceiver);
     }
 }

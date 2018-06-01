@@ -8,10 +8,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.util.Log;
 
 import com.sdwfqin.cbt.utils.CbtLogs;
 import com.sdwfqin.cbt.callback.BaseConfigCallback;
 import com.sdwfqin.cbt.model.DeviceModel;
+import com.sdwfqin.cbt.utils.CbtConstant;
 
 /**
  * 描述：监听蓝牙广播
@@ -21,7 +23,9 @@ import com.sdwfqin.cbt.model.DeviceModel;
  */
 public class BluetoothReceiver extends BroadcastReceiver {
 
+    private static final String TAG = "BroadcastReceiver";
     private BaseConfigCallback mCallback;
+    private BroadcastReceiver mReceiver;
 
     public BluetoothReceiver(Context context, BaseConfigCallback callback) {
         mCallback = callback;
@@ -62,11 +66,13 @@ public class BluetoothReceiver extends BroadcastReceiver {
              * 蓝牙开始搜索
              */
             case BluetoothAdapter.ACTION_DISCOVERY_STARTED:
+                Log.e(TAG,"蓝牙开始搜索");
                 break;
             /**
              * 蓝牙搜索结束
              */
             case BluetoothAdapter.ACTION_DISCOVERY_FINISHED:
+                Log.e(TAG,"蓝牙扫描结束");
                 mCallback.onScanStop();
                 break;
             /**
@@ -74,8 +80,10 @@ public class BluetoothReceiver extends BroadcastReceiver {
              */
             case BluetoothDevice.ACTION_FOUND:
                 BluetoothDevice dev = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+
                 DeviceModel deviceModel = new DeviceModel(dev.getName(), dev.getAddress());
                 mCallback.onFindDevice(deviceModel);
+                Log.e(TAG,"蓝牙发现新设备"+dev.fetchUuidsWithSdp());
                 break;
             /**
              * 设备配对状态改变
@@ -84,6 +92,13 @@ public class BluetoothReceiver extends BroadcastReceiver {
                 dev = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 CbtLogs.i("STATE: " + intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, 0));
                 CbtLogs.i("BluetoothDevice: " + dev.getName() + ", " + dev.getAddress());
+                if (dev.getBondState() == BluetoothDevice.BOND_BONDING) {
+                    mCallback.onConn(CbtConstant.PAIR);
+                } else if (dev.getBondState() == BluetoothDevice.BOND_BONDED) {
+                    mCallback.onConn(CbtConstant.PAIR_SUCCESS);
+                } else if (dev.getBondState() == BluetoothDevice.BOND_NONE) {
+                    mCallback.onConn(CbtConstant.PAIR_UNSUCCESSFUL);
+                }
                 break;
             /**
              * 设备建立连接
@@ -92,6 +107,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
                 dev = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 CbtLogs.i("BluetoothDevice: " + dev.getName() + ", " + dev.getAddress());
                 break;
+
             /**
              * 设备断开连接
              */
@@ -99,6 +115,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
                 dev = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 CbtLogs.i("BluetoothDevice: " + dev.getName() + ", " + dev.getAddress());
                 break;
+
             /**
              * 本地蓝牙适配器
              * BluetoothAdapter连接状态
@@ -108,6 +125,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
                 CbtLogs.i("STATE: " + intent.getIntExtra(BluetoothAdapter.EXTRA_CONNECTION_STATE, 0));
                 CbtLogs.i("BluetoothDevice: " + dev.getName() + ", " + dev.getAddress());
                 break;
+
             /**
              * 提供用于手机的蓝牙耳机支持
              * BluetoothHeadset连接状态
