@@ -9,10 +9,11 @@ import com.sdwfqin.cbt.callback.BaseConfigCallback;
 import com.sdwfqin.cbt.callback.ConnectDeviceCallBack;
 import com.sdwfqin.cbt.callback.ScanCallback;
 import com.sdwfqin.cbt.callback.StateSwitchCallback;
-import com.sdwfqin.cbt.connect.BluetoothDataService;
+import com.sdwfqin.cbt.utils.BluetoothDataService;
 import com.sdwfqin.cbt.receiver.BluetoothReceiver;
 import com.sdwfqin.cbt.utils.CbtLogs;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +34,6 @@ public class CbtManager implements BaseConfigCallback {
     private ConnectDeviceCallBack mConnCallBack;
 
     private List<BluetoothDevice> mDeviceList = new ArrayList<>();
-    private BluetoothDataService mBluetoothDataService;
 
     public static CbtManager getInstance() {
         return CbtManagerHolder.sBleManager;
@@ -75,7 +75,7 @@ public class CbtManager implements BaseConfigCallback {
     public void onConnect(BluetoothDevice device) {
         if (mConnCallBack == null)
             return;
-        mConnCallBack.connectSuccess(mBluetoothDataService.getBluetoothSocket(), device);
+        mConnCallBack.connectSuccess(BluetoothDataService.getInstance().getBluetoothSocket(), device);
     }
 
     private static class CbtManagerHolder {
@@ -169,8 +169,47 @@ public class CbtManager implements BaseConfigCallback {
         mConnCallBack = callBack;
         if (mBluetoothAdapter != null) {
             //配对蓝牙
-            mBluetoothDataService = new BluetoothDataService(mBluetoothAdapter, device);
-            mBluetoothDataService.start();
+            BluetoothDataService.getInstance().init(mBluetoothAdapter, device);
+        }
+    }
+
+    /**
+     * 发送数据
+     *
+     * @param data
+     */
+    public void sendData(byte[] data) {
+        if (BluetoothDataService.getInstance().isConnection) {
+            //配对蓝牙
+            BluetoothDataService.getInstance().sendData(data);
+        }
+    }
+
+    /**
+     * 发送编码后的字符串数据
+     *
+     * @param data
+     */
+    public void sendData(String data, String charsetName) {
+        if (BluetoothDataService.getInstance().isConnection) {
+            try {
+                byte[] body = data.getBytes(charsetName);
+                BluetoothDataService.getInstance().sendData(body);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            //配对蓝牙
+        }
+    }
+
+    /**
+     * 关闭连接服务
+     */
+    public void disableCancelService() {
+        try {
+            BluetoothDataService.getInstance().cancel();
+        } catch (Exception e) {
+            CbtLogs.e(e.getMessage());
         }
     }
 
@@ -178,8 +217,10 @@ public class CbtManager implements BaseConfigCallback {
      * 关闭服务
      */
     public void onDestroy() {
-        if (mBluetoothDataService != null) {
-            mBluetoothDataService.cancel();
+        try {
+            BluetoothDataService.getInstance().cancel();
+        } catch (Exception e) {
+            CbtLogs.e(e.getMessage());
         }
         mContext.unregisterReceiver(mBluetoothReceiver);
     }

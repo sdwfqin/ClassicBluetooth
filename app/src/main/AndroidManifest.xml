@@ -24,6 +24,8 @@
         </activity>
         <activity android:name=".scan.ScanListActivity">
         </activity>
+        <activity android:name=".send.SendDataActivity">
+        </activity>
     </application>
 
 </manifest>

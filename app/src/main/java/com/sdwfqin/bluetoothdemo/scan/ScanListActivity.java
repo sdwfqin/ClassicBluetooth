@@ -3,6 +3,7 @@ package com.sdwfqin.bluetoothdemo.scan;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -11,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 import com.sdwfqin.bluetoothdemo.R;
+import com.sdwfqin.bluetoothdemo.send.SendDataActivity;
 import com.sdwfqin.cbt.CbtManager;
 import com.sdwfqin.cbt.callback.ConnectDeviceCallBack;
 import com.sdwfqin.cbt.callback.ScanCallback;
@@ -61,6 +63,7 @@ public class ScanListActivity extends AppCompatActivity {
                             .connectDevice(item, new ConnectDeviceCallBack() {
                                 @Override
                                 public void connectSuccess(BluetoothSocket socket, BluetoothDevice device) {
+                                    startActivity(new Intent(mContext, SendDataActivity.class));
                                     Toast.makeText(mContext, "连接成功！", Toast.LENGTH_SHORT).show();
                                 }
                             });
