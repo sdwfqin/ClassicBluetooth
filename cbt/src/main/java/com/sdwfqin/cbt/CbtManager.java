@@ -18,7 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 描述：Android经典蓝牙
+ * 描述：Android经典蓝牙工具类
+ * <p>
+ * TODO：已配对设备列表
  *
  * @author zhangqin
  * @date 2018/5/30
