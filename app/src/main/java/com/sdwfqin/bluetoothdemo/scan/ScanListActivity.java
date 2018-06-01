@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.sdwfqin.bluetoothdemo.R;
 import com.sdwfqin.cbt.CbtManager;
@@ -37,7 +38,7 @@ public class ScanListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_scan_list);
         ButterKnife.bind(this);
         mContext = this;
-
+        Log.e("haha1","hahah");
         initList();
         initData();
     }
