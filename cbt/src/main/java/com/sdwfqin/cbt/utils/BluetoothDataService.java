@@ -10,12 +10,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * 创建时间: 2018/5/31
- * 作者: xiaoHou
- * E-mail: 605322850@qq.com
- * Blog: www.xiaohoutongxue.cn
- * 描述: ConnectThread  配对蓝牙
- **/
+ * 描述：蓝牙设备服务
+ *
+ * @author zhangqin
+ * @date 2018/6/1
+ */
 public class BluetoothDataService {
 
     private BluetoothSocket mBluetoothSocket;
