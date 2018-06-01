@@ -66,6 +66,11 @@ public class ScanListActivity extends AppCompatActivity {
                                     startActivity(new Intent(mContext, SendDataActivity.class));
                                     Toast.makeText(mContext, "连接成功！", Toast.LENGTH_SHORT).show();
                                 }
+
+                                @Override
+                                public void connectError(Throwable throwable) {
+                                    Toast.makeText(mContext, "连接失败：" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
                             });
                 }
         );

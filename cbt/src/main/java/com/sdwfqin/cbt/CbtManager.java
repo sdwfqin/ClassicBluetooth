@@ -169,7 +169,7 @@ public class CbtManager implements BaseConfigCallback {
         mConnCallBack = callBack;
         if (mBluetoothAdapter != null) {
             //配对蓝牙
-            BluetoothDataService.getInstance().init(mBluetoothAdapter, device);
+            BluetoothDataService.getInstance().init(mBluetoothAdapter, device, callBack);
         }
     }
 

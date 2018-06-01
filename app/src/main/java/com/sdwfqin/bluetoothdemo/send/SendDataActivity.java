@@ -51,7 +51,7 @@ public class SendDataActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         CbtManager.getInstance().disableCancelService();
+        super.onDestroy();
     }
 }

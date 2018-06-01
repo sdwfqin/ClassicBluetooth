@@ -4,6 +4,8 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
+import com.sdwfqin.cbt.callback.ConnectDeviceCallBack;
+
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -19,6 +21,7 @@ public class BluetoothDataService {
     private BluetoothSocket mBluetoothSocket;
     private BluetoothDevice mBluetoothDevice;
     private BluetoothAdapter mBluetoothAdapter;
+    private ConnectDeviceCallBack mCallBack;
     public boolean isConnection = false;
 
     public static BluetoothDataService getInstance() {
@@ -34,7 +37,17 @@ public class BluetoothDataService {
      *
      * @return
      */
-    public void init(BluetoothAdapter bluetoothAdapter, BluetoothDevice device) {
+    public void init(BluetoothAdapter bluetoothAdapter, BluetoothDevice device, ConnectDeviceCallBack callBack) {
+        mCallBack = callBack;
+        if (mBluetoothDevice != null) {
+            if (mBluetoothDevice.getAddress().equals(device.getAddress())) {
+                mCallBack.connectSuccess(mBluetoothSocket, mBluetoothDevice);
+                return;
+            } else {
+                cancel();
+            }
+        }
+
         mBluetoothAdapter = bluetoothAdapter;
         mBluetoothDevice = device;
         BluetoothSocket tmp = null;
@@ -42,7 +55,7 @@ public class BluetoothDataService {
             //尝试建立安全的连接
             tmp = mBluetoothDevice.createRfcommSocketToServiceRecord(CbtConstant.CBT_UUID);
         } catch (IOException e) {
-            CbtLogs.e(e.getMessage());
+            mCallBack.connectError(e);
         }
         mBluetoothSocket = tmp;
         connect();
@@ -57,7 +70,7 @@ public class BluetoothDataService {
                 mBluetoothSocket.connect();
                 isConnection = true;
             } catch (IOException e) {
-                CbtLogs.e(e.getMessage());
+                mCallBack.connectError(e);
             }
         }).start();
     }
@@ -83,6 +96,8 @@ public class BluetoothDataService {
     public void cancel() {
         try {
             mBluetoothSocket.close();
+            mBluetoothAdapter = null;
+            mBluetoothDevice = null;
             isConnection = false;
         } catch (IOException e) {
             CbtLogs.e(e.getMessage());

@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
     private Context mContext;
 
-    private String[] mTitle = new String[]{"开启蓝牙", "关闭蓝牙", "开始搜索"};
+    private String[] mTitle = new String[]{"开启蓝牙", "关闭蓝牙", "设备列表"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

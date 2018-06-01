@@ -17,4 +17,9 @@ public interface ConnectDeviceCallBack {
      * @param device
      */
     void connectSuccess(BluetoothSocket socket, BluetoothDevice device);
+
+    /**
+     * 连接失败
+     */
+    void connectError(Throwable throwable);
 }
