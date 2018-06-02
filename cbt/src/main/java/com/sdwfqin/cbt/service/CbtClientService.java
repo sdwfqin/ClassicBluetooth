@@ -1,34 +1,39 @@
-package com.sdwfqin.cbt.utils;
+package com.sdwfqin.cbt.service;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
-import com.sdwfqin.cbt.callback.ConnectDeviceCallBack;
+import com.sdwfqin.cbt.callback.ConnectDeviceCallback;
+import com.sdwfqin.cbt.callback.SendDataCallback;
+import com.sdwfqin.cbt.utils.CbtConstant;
+import com.sdwfqin.cbt.utils.CbtExecutor;
+import com.sdwfqin.cbt.utils.CbtLogs;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 
 /**
- * 描述：蓝牙设备服务
+ * 描述：蓝牙设备客户端服务
  *
  * @author zhangqin
  * @date 2018/6/1
  */
-public class BluetoothDataService {
+public class CbtClientService {
 
     private BluetoothSocket mBluetoothSocket;
     private BluetoothDevice mBluetoothDevice;
     private BluetoothAdapter mBluetoothAdapter;
-    private ConnectDeviceCallBack mCallBack;
+    private ConnectDeviceCallback mCallBack;
     public boolean isConnection = false;
 
-    public static BluetoothDataService getInstance() {
-        return BluetoothDataServiceHolder.sCbtManager;
+    public static CbtClientService getInstance() {
+        return BluetoothDataServiceHolder.CBT_CLIENT_SERVICE;
     }
 
     private static class BluetoothDataServiceHolder {
-        private static final BluetoothDataService sCbtManager = new BluetoothDataService();
+        private static final CbtClientService CBT_CLIENT_SERVICE = new CbtClientService();
     }
 
     /**
@@ -36,7 +41,7 @@ public class BluetoothDataService {
      *
      * @return
      */
-    public void init(BluetoothAdapter bluetoothAdapter, BluetoothDevice device, ConnectDeviceCallBack callBack) {
+    public void init(BluetoothAdapter bluetoothAdapter, BluetoothDevice device, ConnectDeviceCallback callBack) {
         mCallBack = callBack;
         if (mBluetoothDevice != null) {
             if (mBluetoothDevice.getAddress().equals(device.getAddress())) {
@@ -61,7 +66,7 @@ public class BluetoothDataService {
     }
 
     private void connect() {
-        new Thread(() -> {
+        CbtExecutor.getInstance().execute(() -> {
             if (mBluetoothAdapter.isDiscovering()) {
                 mBluetoothAdapter.cancelDiscovery();
             }
@@ -71,7 +76,7 @@ public class BluetoothDataService {
             } catch (IOException e) {
                 mCallBack.connectError(e);
             }
-        }).start();
+        });
     }
 
     public BluetoothSocket getBluetoothSocket() {
@@ -81,15 +86,22 @@ public class BluetoothDataService {
     /**
      * 发送数据
      */
-    public void sendData(byte[] data) {
-        OutputStream outputStream = null;
-        try {
-            outputStream = mBluetoothSocket.getOutputStream();
-            outputStream.write(data, 0, data.length);
-            outputStream.flush();
-        } catch (IOException e) {
-            CbtLogs.e(e.getMessage());
-        }
+    public void sendData(List<byte[]> data, SendDataCallback callback) {
+        CbtExecutor.getInstance().execute(() -> {
+            OutputStream outputStream;
+            try {
+                outputStream = mBluetoothSocket.getOutputStream();
+                for (int i = 0; i < data.size(); i++) {
+                    byte[] bytes = data.get(i);
+                    outputStream.write(bytes, 0, bytes.length);
+                    outputStream.flush();
+                }
+                callback.sendSuccess();
+            } catch (IOException e) {
+                callback.sendError(e);
+                CbtLogs.e(e.getMessage());
+            }
+        });
     }
 
     public void cancel() {

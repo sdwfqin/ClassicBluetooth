@@ -9,17 +9,20 @@ import android.bluetooth.BluetoothSocket;
  * @author zhangqin
  * @date 2018/6/1
  */
-public interface ConnectDeviceCallBack {
+public interface ConnectDeviceCallback {
 
     /**
      * 连接状态
      *
+     * @param socket
      * @param device
      */
     void connectSuccess(BluetoothSocket socket, BluetoothDevice device);
 
     /**
      * 连接失败
+     *
+     * @param throwable
      */
     void connectError(Throwable throwable);
 }

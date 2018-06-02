@@ -17,11 +17,15 @@ public interface ScanCallback {
      * <p>
      * true 成功
      * false 失败
+     *
+     * @param isOn
      */
     void onScanStart(boolean isOn);
 
     /**
      * 搜索结束
+     *
+     * @param deviceList
      */
     void onScanStop(List<BluetoothDevice> deviceList);
 

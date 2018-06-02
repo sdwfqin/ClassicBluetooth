@@ -6,14 +6,14 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 
 import com.sdwfqin.cbt.callback.BaseConfigCallback;
-import com.sdwfqin.cbt.callback.ConnectDeviceCallBack;
+import com.sdwfqin.cbt.callback.ConnectDeviceCallback;
 import com.sdwfqin.cbt.callback.ScanCallback;
+import com.sdwfqin.cbt.callback.SendDataCallback;
 import com.sdwfqin.cbt.callback.StateSwitchCallback;
-import com.sdwfqin.cbt.utils.BluetoothDataService;
 import com.sdwfqin.cbt.receiver.BluetoothReceiver;
+import com.sdwfqin.cbt.service.CbtClientService;
 import com.sdwfqin.cbt.utils.CbtLogs;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,18 +33,19 @@ public class CbtManager implements BaseConfigCallback {
 
     private StateSwitchCallback mStateSwitchCallback;
     private ScanCallback mScanCallback;
-    private ConnectDeviceCallBack mConnCallBack;
+    private ConnectDeviceCallback mConnCallBack;
 
     private List<BluetoothDevice> mDeviceList = new ArrayList<>();
 
     public static CbtManager getInstance() {
-        return CbtManagerHolder.sBleManager;
+        return CbtManagerHolder.CBT_MANAGER;
     }
 
     @Override
     public void onStateSwitch(int state) {
-        if (mStateSwitchCallback == null)
+        if (mStateSwitchCallback == null) {
             return;
+        }
         if (state == BluetoothAdapter.STATE_ON) {
             mStateSwitchCallback.onStateChange(true);
         } else if (state == BluetoothAdapter.STATE_OFF) {
@@ -54,15 +55,17 @@ public class CbtManager implements BaseConfigCallback {
 
     @Override
     public void onScanStop() {
-        if (mScanCallback == null)
+        if (mScanCallback == null) {
             return;
+        }
         mScanCallback.onScanStop(mDeviceList);
     }
 
     @Override
     public void onFindDevice(BluetoothDevice device) {
-        if (mScanCallback == null)
+        if (mScanCallback == null) {
             return;
+        }
         // 排除相同设备
         for (int i = 0; i < mDeviceList.size(); i++) {
             if (device.getAddress().equals(mDeviceList.get(i).getAddress())) {
@@ -75,13 +78,14 @@ public class CbtManager implements BaseConfigCallback {
 
     @Override
     public void onConnect(BluetoothDevice device) {
-        if (mConnCallBack == null)
+        if (mConnCallBack == null) {
             return;
-        mConnCallBack.connectSuccess(BluetoothDataService.getInstance().getBluetoothSocket(), device);
+        }
+        mConnCallBack.connectSuccess(CbtClientService.getInstance().getBluetoothSocket(), device);
     }
 
     private static class CbtManagerHolder {
-        private static final CbtManager sBleManager = new CbtManager();
+        private static final CbtManager CBT_MANAGER = new CbtManager();
     }
 
     /**
@@ -167,11 +171,11 @@ public class CbtManager implements BaseConfigCallback {
      *
      * @param callBack
      */
-    public void connectDevice(BluetoothDevice device, ConnectDeviceCallBack callBack) {
+    public void connectDevice(BluetoothDevice device, ConnectDeviceCallback callBack) {
         mConnCallBack = callBack;
         if (mBluetoothAdapter != null) {
             //配对蓝牙
-            BluetoothDataService.getInstance().init(mBluetoothAdapter, device, callBack);
+            CbtClientService.getInstance().init(mBluetoothAdapter, device, callBack);
         }
     }
 
@@ -180,10 +184,26 @@ public class CbtManager implements BaseConfigCallback {
      *
      * @param data
      */
-    public void sendData(byte[] data) {
-        if (BluetoothDataService.getInstance().isConnection) {
-            //配对蓝牙
-            BluetoothDataService.getInstance().sendData(data);
+    public void sendData(byte[] data, SendDataCallback callback) {
+        if (CbtClientService.getInstance().isConnection) {
+            List<byte[]> bytes = new ArrayList<>();
+            bytes.add(data);
+            CbtClientService.getInstance().sendData(bytes, callback);
+        } else {
+            callback.sendError(new Exception("设备未连接"));
+        }
+    }
+
+    /**
+     * 发送数据
+     *
+     * @param data
+     */
+    public void sendData(List<byte[]> data, SendDataCallback callback) {
+        if (CbtClientService.getInstance().isConnection) {
+            CbtClientService.getInstance().sendData(data, callback);
+        } else {
+            callback.sendError(new Exception("设备未连接"));
         }
     }
 
@@ -192,15 +212,19 @@ public class CbtManager implements BaseConfigCallback {
      *
      * @param data
      */
-    public void sendData(String data, String charsetName) {
-        if (BluetoothDataService.getInstance().isConnection) {
+    public void sendData(String data, String charsetName, SendDataCallback callback) {
+        if (CbtClientService.getInstance().isConnection) {
             try {
                 byte[] body = data.getBytes(charsetName);
-                BluetoothDataService.getInstance().sendData(body);
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                List<byte[]> bytes = new ArrayList<>();
+                bytes.add(body);
+                CbtClientService.getInstance().sendData(bytes, callback);
+            } catch (Exception e) {
+                callback.sendError(e);
+                CbtLogs.e(e);
             }
-            //配对蓝牙
+        } else {
+            callback.sendError(new Exception("设备未连接"));
         }
     }
 
@@ -209,7 +233,7 @@ public class CbtManager implements BaseConfigCallback {
      */
     public void disableCancelService() {
         try {
-            BluetoothDataService.getInstance().cancel();
+            CbtClientService.getInstance().cancel();
         } catch (Exception e) {
             CbtLogs.e(e.getMessage());
         }
@@ -220,7 +244,7 @@ public class CbtManager implements BaseConfigCallback {
      */
     public void onDestroy() {
         try {
-            BluetoothDataService.getInstance().cancel();
+            CbtClientService.getInstance().cancel();
         } catch (Exception e) {
             CbtLogs.e(e.getMessage());
         }

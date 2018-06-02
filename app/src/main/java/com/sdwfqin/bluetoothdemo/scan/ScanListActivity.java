@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.sdwfqin.bluetoothdemo.R;
 import com.sdwfqin.bluetoothdemo.send.SendDataActivity;
 import com.sdwfqin.cbt.CbtManager;
-import com.sdwfqin.cbt.callback.ConnectDeviceCallBack;
+import com.sdwfqin.cbt.callback.ConnectDeviceCallback;
 import com.sdwfqin.cbt.callback.ScanCallback;
 
 import java.util.List;
@@ -60,7 +60,7 @@ public class ScanListActivity extends AppCompatActivity {
                     BluetoothDevice item = mScanListAdapter.getItem(position);
                     CbtManager
                             .getInstance()
-                            .connectDevice(item, new ConnectDeviceCallBack() {
+                            .connectDevice(item, new ConnectDeviceCallback() {
                                 @Override
                                 public void connectSuccess(BluetoothSocket socket, BluetoothDevice device) {
                                     startActivity(new Intent(mContext, SendDataActivity.class));

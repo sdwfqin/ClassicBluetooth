@@ -67,20 +67,24 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     CbtManager
                             .getInstance()
                             .enableBluetooth(isOn -> {
-                                if (isOn)
+                                if (isOn) {
                                     Toast.makeText(mContext, "蓝牙已开启", Toast.LENGTH_SHORT).show();
+                                }
                             });
                     break;
                 case 1:
                     CbtManager
                             .getInstance()
                             .disableBluetooth(isOn -> {
-                                if (!isOn)
+                                if (!isOn) {
                                     Toast.makeText(mContext, "蓝牙已关闭", Toast.LENGTH_SHORT).show();
+                                }
                             });
                     break;
                 case 2:
                     startActivity(new Intent(mContext, ScanListActivity.class));
+                    break;
+                default:
                     break;
             }
         });

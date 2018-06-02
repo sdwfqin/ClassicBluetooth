@@ -12,6 +12,8 @@ public interface BaseConfigCallback {
 
     /**
      * 蓝牙开关
+     *
+     * @param state
      */
     void onStateSwitch(int state);
 

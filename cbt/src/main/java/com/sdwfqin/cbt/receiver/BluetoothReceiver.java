@@ -25,18 +25,29 @@ public class BluetoothReceiver extends BroadcastReceiver {
     public BluetoothReceiver(Context context, BaseConfigCallback callback) {
         mCallback = callback;
         IntentFilter filter = new IntentFilter();
-        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);//蓝牙开关状态
-        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);//蓝牙开始搜索
-        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);//蓝牙搜索结束
+        //蓝牙开关状态
+        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+        //蓝牙开始搜索
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+        //蓝牙搜索结束
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
 
-        filter.addAction(BluetoothDevice.ACTION_FOUND);//蓝牙发现新设备(未配对)
-        filter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);//设备配对状态改变
-        filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);//设备建立连接
-        filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);//设备断开连接
+        //蓝牙发现新设备(未配对)
+        filter.addAction(BluetoothDevice.ACTION_FOUND);
+        //设备配对状态改变
+        filter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
+        //设备建立连接
+        filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
+        //设备断开连接
+        filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
 
-        filter.addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED); //BluetoothAdapter连接状态
-        filter.addAction(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED); //BluetoothHeadset连接状态
-        filter.addAction(BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED); //BluetoothA2dp连接状态
+        //BluetoothAdapter连接状态
+        filter.addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED);
+        //BluetoothHeadset连接状态
+        filter.addAction(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED);
+        //BluetoothA2dp连接状态
+        filter.addAction(BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED);
+
         context.registerReceiver(this, filter);
     }
 
@@ -45,8 +56,9 @@ public class BluetoothReceiver extends BroadcastReceiver {
         String action = intent.getAction();
         BluetoothDevice dev;
         int state;
-        if (action == null)
+        if (action == null) {
             return;
+        }
         switch (action) {
             /**
              * 蓝牙开关状态
@@ -133,6 +145,8 @@ public class BluetoothReceiver extends BroadcastReceiver {
                 dev = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 CbtLogs.i("STATE: " + intent.getIntExtra(BluetoothHeadset.EXTRA_STATE, 0));
                 CbtLogs.i("BluetoothDevice: " + dev.getName() + ", " + dev.getAddress());
+                break;
+            default:
                 break;
         }
     }
