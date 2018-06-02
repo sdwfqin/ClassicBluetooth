@@ -29,10 +29,10 @@ public class CbtClientService {
     public boolean isConnection = false;
 
     public static CbtClientService getInstance() {
-        return BluetoothDataServiceHolder.CBT_CLIENT_SERVICE;
+        return CbtClientServiceHolder.CBT_CLIENT_SERVICE;
     }
 
-    private static class BluetoothDataServiceHolder {
+    private static class CbtClientServiceHolder {
         private static final CbtClientService CBT_CLIENT_SERVICE = new CbtClientService();
     }
 

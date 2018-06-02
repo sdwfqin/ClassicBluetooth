@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.sdwfqin.bluetoothdemo.scan.ScanListActivity;
 import com.sdwfqin.cbt.CbtManager;
+import com.sdwfqin.cbt.callback.ServiceListenerCallback;
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
     private Context mContext;
 
-    private String[] mTitle = new String[]{"开启蓝牙", "关闭蓝牙", "设备列表"};
+    private String[] mTitle = new String[]{"开启蓝牙", "关闭蓝牙", "设备列表", "接收数据"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +84,19 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     break;
                 case 2:
                     startActivity(new Intent(mContext, ScanListActivity.class));
+                    break;
+                case 3:
+                    CbtManager.getInstance().startServiceListener(new ServiceListenerCallback() {
+                        @Override
+                        public void onStartError(Throwable throwable) {
+
+                        }
+
+                        @Override
+                        public void onDataListener(String s) {
+
+                        }
+                    });
                     break;
                 default:
                     break;

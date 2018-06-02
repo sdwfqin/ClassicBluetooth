@@ -9,9 +9,11 @@ import com.sdwfqin.cbt.callback.BaseConfigCallback;
 import com.sdwfqin.cbt.callback.ConnectDeviceCallback;
 import com.sdwfqin.cbt.callback.ScanCallback;
 import com.sdwfqin.cbt.callback.SendDataCallback;
+import com.sdwfqin.cbt.callback.ServiceListenerCallback;
 import com.sdwfqin.cbt.callback.StateSwitchCallback;
 import com.sdwfqin.cbt.receiver.BluetoothReceiver;
 import com.sdwfqin.cbt.service.CbtClientService;
+import com.sdwfqin.cbt.service.CbtServiceListener;
 import com.sdwfqin.cbt.utils.CbtLogs;
 
 import java.util.ArrayList;
@@ -34,6 +36,7 @@ public class CbtManager implements BaseConfigCallback {
     private StateSwitchCallback mStateSwitchCallback;
     private ScanCallback mScanCallback;
     private ConnectDeviceCallback mConnCallBack;
+    private ServiceListenerCallback mListenerCallback;
 
     private List<BluetoothDevice> mDeviceList = new ArrayList<>();
 
@@ -226,6 +229,29 @@ public class CbtManager implements BaseConfigCallback {
         } else {
             callback.sendError(new Exception("设备未连接"));
         }
+    }
+
+    /**
+     * 开启蓝牙服务端
+     * <p>
+     * TODO: 自行判断是否开启蓝牙
+     */
+    public void startServiceListener(ServiceListenerCallback callback) {
+        mListenerCallback = callback;
+        if (mBluetoothAdapter == null) {
+            return;
+        }
+        CbtServiceListener.getInstance().init(mBluetoothAdapter, callback);
+    }
+
+    /**
+     * 关闭蓝牙服务端
+     */
+    public void closeService() {
+        if (mBluetoothAdapter == null) {
+            return;
+        }
+        CbtServiceListener.getInstance().cancel();
     }
 
     /**
