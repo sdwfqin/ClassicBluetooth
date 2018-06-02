@@ -22,10 +22,12 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".scan.ScanListActivity">
-        </activity>
-        <activity android:name=".send.SendDataActivity">
-        </activity>
+        <activity
+            android:name=".scan.ScanListActivity"
+            android:label="设备列表"/>
+        <activity
+            android:name=".send.SendDataActivity"
+            android:label="发送数据"/>
     </application>
 
 </manifest>
