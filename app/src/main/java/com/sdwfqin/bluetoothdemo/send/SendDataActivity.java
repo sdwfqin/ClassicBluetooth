@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.sdwfqin.bluetoothdemo.R;
 import com.sdwfqin.cbt.CbtManager;
@@ -92,7 +93,7 @@ public class SendDataActivity extends AppCompatActivity {
 
                     @Override
                     public void sendError(Throwable throwable) {
-
+                        Toast.makeText(SendDataActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }

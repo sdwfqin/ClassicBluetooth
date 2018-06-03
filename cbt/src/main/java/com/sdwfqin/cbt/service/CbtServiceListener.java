@@ -111,7 +111,8 @@ public class CbtServiceListener {
                     out.write(b, 0, l);
                     break;
                 }
-                String s = new String(b, "GBK");
+                String s = new String(out.toByteArray(), "GBK");
+                CbtLogs.e(s);
                 mListenerCallback.onDataListener(s, mBluetoothSocket.getRemoteDevice());
             }
         } catch (Throwable e) {

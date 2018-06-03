@@ -10,9 +10,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.sdwfqin.bluetoothdemo.receivedata.ReceiveDataActivity;
 import com.sdwfqin.bluetoothdemo.scan.ScanListActivity;
 import com.sdwfqin.cbt.CbtManager;
-import com.sdwfqin.cbt.callback.ServiceListenerCallback;
 
 import java.util.List;
 
@@ -86,17 +86,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     startActivity(new Intent(mContext, ScanListActivity.class));
                     break;
                 case 3:
-                    CbtManager.getInstance().startServiceListener(new ServiceListenerCallback() {
-                        @Override
-                        public void onStartError(Throwable throwable) {
-
-                        }
-
-                        @Override
-                        public void onDataListener(String s) {
-
-                        }
-                    });
+                    startActivity(new Intent(mContext, ReceiveDataActivity.class));
                     break;
                 default:
                     break;

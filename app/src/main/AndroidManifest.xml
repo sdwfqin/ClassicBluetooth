@@ -28,6 +28,9 @@
         <activity
             android:name=".send.SendDataActivity"
             android:label="发送数据"/>
+        <activity
+            android:name=".receivedata.ReceiveDataActivity"
+            android:label="接收数据"/>
     </application>
 
 </manifest>
