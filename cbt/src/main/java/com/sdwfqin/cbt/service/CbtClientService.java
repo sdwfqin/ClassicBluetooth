@@ -87,21 +87,23 @@ public class CbtClientService {
      * 发送数据
      */
     public void sendData(List<byte[]> data, SendDataCallback callback) {
-        CbtExecutor.getInstance().execute(() -> {
-            OutputStream outputStream;
-            try {
-                outputStream = mBluetoothSocket.getOutputStream();
-                for (int i = 0; i < data.size(); i++) {
-                    byte[] bytes = data.get(i);
-                    outputStream.write(bytes, 0, bytes.length);
-                    outputStream.flush();
-                }
-                callback.sendSuccess();
-            } catch (IOException e) {
-                callback.sendError(e);
-                CbtLogs.e(e.getMessage());
-            }
-        });
+        CbtExecutor
+                .getInstance()
+                .execute(() -> {
+                    OutputStream outputStream;
+                    try {
+                        outputStream = mBluetoothSocket.getOutputStream();
+                        for (int i = 0; i < data.size(); i++) {
+                            byte[] bytes = data.get(i);
+                            outputStream.write(bytes, 0, bytes.length);
+                            outputStream.flush();
+                        }
+                        callback.sendSuccess();
+                    } catch (IOException e) {
+                        callback.sendError(e);
+                        CbtLogs.e(e.getMessage());
+                    }
+                });
     }
 
     public void cancel() {

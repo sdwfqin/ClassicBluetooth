@@ -2,6 +2,8 @@ package com.sdwfqin.cbt.callback;
 
 /**
  * 描述：发送数据
+ * <p>
+ * 注意线程
  *
  * @author zhangqin
  * @date 2018/6/1
