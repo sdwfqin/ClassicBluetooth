@@ -14,10 +14,12 @@ import com.sdwfqin.cbt.callback.StateSwitchCallback;
 import com.sdwfqin.cbt.receiver.BluetoothReceiver;
 import com.sdwfqin.cbt.service.CbtClientService;
 import com.sdwfqin.cbt.service.CbtServiceListener;
+import com.sdwfqin.cbt.utils.CbtConstant;
 import com.sdwfqin.cbt.utils.CbtLogs;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 描述：Android经典蓝牙工具类
@@ -84,6 +86,7 @@ public class CbtManager implements BaseConfigCallback {
         if (mConnCallBack == null) {
             return;
         }
+        CbtClientService.getInstance().isConnection = true;
         mConnCallBack.connectSuccess(CbtClientService.getInstance().getBluetoothSocket(), device);
     }
 
@@ -122,6 +125,28 @@ public class CbtManager implements BaseConfigCallback {
         CbtLogs.Config config = CbtLogs.getConfig();
         config.setLogSwitch(isEnable)
                 .setConsoleSwitch(isEnable);
+        return this;
+    }
+
+    /**
+     * 设置自定义UUID
+     *
+     * @param uuid
+     * @return BleManager
+     */
+    public CbtManager setUUID(String uuid) {
+        CbtConstant.CBT_UUID = UUID.fromString(uuid);
+        return this;
+    }
+
+    /**
+     * 设置自定义服务名称
+     *
+     * @param name
+     * @return BleManager
+     */
+    public CbtManager setServiceName(String name) {
+        CbtConstant.CBT_NAME = name;
         return this;
     }
 

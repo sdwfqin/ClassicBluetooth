@@ -14,6 +14,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * 描述：蓝牙设备客户端服务
  *
@@ -71,10 +78,13 @@ public class CbtClientService {
                 mBluetoothAdapter.cancelDiscovery();
             }
             try {
-                mBluetoothSocket.connect();
-                isConnection = true;
+                if (!mBluetoothSocket.isConnected()) {
+                    mBluetoothSocket.connect();
+                }
+                // isConnection = true;
             } catch (IOException e) {
-                mCallBack.connectError(e);
+                CbtLogs.e(e.getMessage());
+                // mCallBack.connectError(e);
             }
         });
     }
@@ -87,21 +97,33 @@ public class CbtClientService {
      * 发送数据
      */
     public void sendData(List<byte[]> data, SendDataCallback callback) {
-        CbtExecutor
-                .getInstance()
-                .execute(() -> {
-                    OutputStream outputStream;
-                    try {
-                        outputStream = mBluetoothSocket.getOutputStream();
-                        for (int i = 0; i < data.size(); i++) {
-                            byte[] bytes = data.get(i);
-                            outputStream.write(bytes, 0, bytes.length);
-                            outputStream.flush();
-                        }
+        Observable.create((ObservableOnSubscribe<String>) emitter -> {
+            OutputStream outputStream = mBluetoothSocket.getOutputStream();
+            for (int i = 0; i < data.size(); i++) {
+                outputStream.write(data.get(i));
+                outputStream.flush();
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(String s) {
                         callback.sendSuccess();
-                    } catch (IOException e) {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
                         callback.sendError(e);
-                        CbtLogs.e(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
     }

@@ -21,7 +21,11 @@ TODO：
 # 导入
 
 ```
-implementation 'com.sdwfqin.cbt:cbt:1.0.0'
+// 使用rxjava进行线程切换
+implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+implementation 'io.reactivex.rxjava2:rxjava:2.1.14'
+
+implementation 'com.sdwfqin.cbt:cbt:1.0.1'
 ```
 
 # 使用
@@ -40,6 +44,28 @@ implementation 'com.sdwfqin.cbt:cbt:1.0.0'
                     // 是否打印相关日志
                     .enableLog(true);
         }
+    }
+    
+    /**
+     * 设置自定义UUID
+     *
+     * @param uuid
+     * @return BleManager
+     */
+    public CbtManager setUUID(String uuid) {
+        CbtConstant.CBT_UUID = UUID.fromString(uuid);
+        return this;
+    }
+
+    /**
+     * 设置自定义服务名称
+     *
+     * @param name
+     * @return BleManager
+     */
+    public CbtManager setServiceName(String name) {
+        CbtConstant.CBT_NAME = name;
+        return this;
     }
     ```
 

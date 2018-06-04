@@ -16,6 +16,7 @@ import com.sdwfqin.bluetoothdemo.send.SendDataActivity;
 import com.sdwfqin.cbt.CbtManager;
 import com.sdwfqin.cbt.callback.ConnectDeviceCallback;
 import com.sdwfqin.cbt.callback.ScanCallback;
+import com.sdwfqin.cbt.utils.CbtLogs;
 
 import java.util.List;
 
@@ -63,13 +64,14 @@ public class ScanListActivity extends AppCompatActivity {
                             .connectDevice(item, new ConnectDeviceCallback() {
                                 @Override
                                 public void connectSuccess(BluetoothSocket socket, BluetoothDevice device) {
-                                    startActivity(new Intent(mContext, SendDataActivity.class));
                                     Toast.makeText(mContext, "连接成功！", Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(mContext, SendDataActivity.class));
                                 }
 
                                 @Override
                                 public void connectError(Throwable throwable) {
-                                    Toast.makeText(mContext, "连接失败：" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                                    CbtLogs.e(throwable.getMessage());
+                                    Toast.makeText(mContext, throwable.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
                 }

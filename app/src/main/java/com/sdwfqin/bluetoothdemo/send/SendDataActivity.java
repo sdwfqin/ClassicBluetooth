@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.sdwfqin.bluetoothdemo.R;
 import com.sdwfqin.cbt.CbtManager;
 import com.sdwfqin.cbt.callback.SendDataCallback;
+import com.sdwfqin.cbt.utils.CbtLogs;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -94,13 +95,8 @@ public class SendDataActivity extends AppCompatActivity {
                     @Override
                     public void sendError(Throwable throwable) {
                         Toast.makeText(SendDataActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                        CbtLogs.e(throwable);
                     }
                 });
-    }
-
-    @Override
-    protected void onDestroy() {
-        CbtManager.getInstance().disableCancelService();
-        super.onDestroy();
     }
 }
