@@ -85,7 +85,7 @@ public class SendDataActivity extends AppCompatActivity {
 
         CbtManager
                 .getInstance()
-                .sendData(data, new SendDataCallback() {
+                .sendData(bytes, new SendDataCallback() {
                     @Override
                     public void sendSuccess() {
 
