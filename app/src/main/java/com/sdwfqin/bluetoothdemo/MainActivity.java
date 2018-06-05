@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.sdwfqin.bluetoothdemo.bond.BondedListActivity;
 import com.sdwfqin.bluetoothdemo.receivedata.ReceiveDataActivity;
 import com.sdwfqin.bluetoothdemo.scan.ScanListActivity;
 import com.sdwfqin.cbt.CbtManager;
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
     private Context mContext;
 
-    private String[] mTitle = new String[]{"开启蓝牙", "关闭蓝牙", "设备列表", "接收数据"};
+    private String[] mTitle = new String[]{"开启蓝牙", "关闭蓝牙", "设备列表", "接收数据", "已配对设备"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +88,9 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     break;
                 case 3:
                     startActivity(new Intent(mContext, ReceiveDataActivity.class));
+                    break;
+                case 4:
+                    startActivity(new Intent(mContext, BondedListActivity.class));
                     break;
                 default:
                     break;

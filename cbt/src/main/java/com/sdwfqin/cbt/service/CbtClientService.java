@@ -7,7 +7,6 @@ import android.bluetooth.BluetoothSocket;
 import com.sdwfqin.cbt.callback.ConnectDeviceCallback;
 import com.sdwfqin.cbt.callback.SendDataCallback;
 import com.sdwfqin.cbt.utils.CbtConstant;
-import com.sdwfqin.cbt.utils.CbtExecutor;
 import com.sdwfqin.cbt.utils.CbtLogs;
 
 import java.io.IOException;
@@ -73,20 +72,35 @@ public class CbtClientService {
     }
 
     private void connect() {
-        CbtExecutor.getInstance().execute(() -> {
+        Observable.create((ObservableOnSubscribe<String>) emitter -> {
             if (mBluetoothAdapter.isDiscovering()) {
                 mBluetoothAdapter.cancelDiscovery();
             }
-            try {
-                if (!mBluetoothSocket.isConnected()) {
-                    mBluetoothSocket.connect();
-                }
-                // isConnection = true;
-            } catch (IOException e) {
-                CbtLogs.e(e.getMessage());
-                // mCallBack.connectError(e);
-            }
-        });
+            mBluetoothSocket.connect();
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mBluetoothAdapter = null;
+                        mBluetoothDevice = null;
+                        mCallBack.connectError(e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     public BluetoothSocket getBluetoothSocket() {

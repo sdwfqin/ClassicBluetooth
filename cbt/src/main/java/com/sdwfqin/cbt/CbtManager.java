@@ -19,6 +19,7 @@ import com.sdwfqin.cbt.utils.CbtLogs;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -192,6 +193,15 @@ public class CbtManager implements BaseConfigCallback {
         // 是否正在搜索
         // mBluetoothAdapter.isDiscovering()
 
+    }
+
+    /**
+     * 已配对设备列表
+     */
+    public List<BluetoothDevice> getBondedDevices() {
+        Set<BluetoothDevice> bondedDevices = mBluetoothAdapter.getBondedDevices();
+        List<BluetoothDevice> list = new ArrayList(bondedDevices);
+        return list;
     }
 
     /**

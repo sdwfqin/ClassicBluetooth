@@ -9,10 +9,10 @@ Android经典蓝牙工具类
 - 连接配对
 - 发送数据
 - 接收数据
+- 获取已配对设备
 
 TODO：
 
-- 获取已配对设备
 - 接收文件
 - 功能优化、性能优化、BUG清扫
 
@@ -25,7 +25,7 @@ TODO：
 implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
 implementation 'io.reactivex.rxjava2:rxjava:2.1.14'
 
-implementation 'com.sdwfqin.cbt:cbt:1.0.1'
+implementation 'com.sdwfqin.cbt:cbt:1.0.2'
 ```
 
 # 使用
