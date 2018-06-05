@@ -180,6 +180,14 @@ public class CbtManager implements BaseConfigCallback {
     }
 
     /**
+     * 判断是否开启蓝牙
+     */
+    public boolean isEnableBluetooth() {
+
+        return mBluetoothAdapter.isEnabled();
+    }
+
+    /**
      * 开始搜索
      * <p>
      * TODO: 自行判断是否开启蓝牙
