@@ -1,7 +1,10 @@
 package com.sdwfqin.cbt.utils;
 
+import android.support.annotation.NonNull;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -26,13 +29,18 @@ public class CbtExecutor {
     }
 
     private CbtExecutor() {
-        mSingleThreadPool = new ThreadPoolExecutor(1, 1,
+        mSingleThreadPool = new ThreadPoolExecutor(
+                1,
+                1,
                 0L, TimeUnit.MILLISECONDS,
-                new LinkedBlockingQueue<>(1024),
-                r -> {
-                    Thread thread = new Thread(r);
-                    thread.setName("cbt");
-                    return thread;
+                new LinkedBlockingQueue<Runnable>(1024),
+                new ThreadFactory() {
+                    @Override
+                    public Thread newThread(@NonNull Runnable r) {
+                        Thread thread = new Thread(r);
+                        thread.setName("cbt");
+                        return thread;
+                    }
                 }, new ThreadPoolExecutor.AbortPolicy());
     }
 

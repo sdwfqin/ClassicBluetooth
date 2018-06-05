@@ -66,27 +66,30 @@ public class CbtServiceListener {
     private void listener() {
         CbtExecutor
                 .getInstance()
-                .execute(() -> {
-                    // Keep listening until exception occurs or a socket is returned
-                    while (true) {
-                        try {
-                            mBluetoothSocket = mBluetoothServerSocket.accept();
-                        } catch (IOException e) {
-                            CbtLogs.e(e.getMessage());
-                            mListenerCallback.onStartError(e);
-                            break;
-                        }
-                        // 关闭监听，只连接一个设备
-                        if (mBluetoothSocket != null) {
-                            // 循环读取对方数据(若没有数据，则阻塞等待)
-                            loopRead();
-                            // 关闭监听，只连接一个设备
+                .execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Keep listening until exception occurs or a socket is returned
+                        while (true) {
                             try {
-                                mBluetoothServerSocket.close();
+                                mBluetoothSocket = mBluetoothServerSocket.accept();
                             } catch (IOException e) {
                                 CbtLogs.e(e.getMessage());
+                                mListenerCallback.onStartError(e);
+                                break;
                             }
-                            break;
+                            // 关闭监听，只连接一个设备
+                            if (mBluetoothSocket != null) {
+                                // 循环读取对方数据(若没有数据，则阻塞等待)
+                                loopRead();
+                                // 关闭监听，只连接一个设备
+                                try {
+                                    mBluetoothServerSocket.close();
+                                } catch (IOException e) {
+                                    CbtLogs.e(e.getMessage());
+                                }
+                                break;
+                            }
                         }
                     }
                 });

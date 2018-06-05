@@ -25,7 +25,7 @@ TODO：
 implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
 implementation 'io.reactivex.rxjava2:rxjava:2.1.14'
 
-implementation 'com.sdwfqin.cbt:cbt:1.0.2'
+implementation 'com.sdwfqin.cbt:cbt:1.0.3'
 ```
 
 # 使用

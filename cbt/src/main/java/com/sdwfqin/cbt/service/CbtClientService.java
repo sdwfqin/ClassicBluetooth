@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -72,11 +73,15 @@ public class CbtClientService {
     }
 
     private void connect() {
-        Observable.create((ObservableOnSubscribe<String>) emitter -> {
-            if (mBluetoothAdapter.isDiscovering()) {
-                mBluetoothAdapter.cancelDiscovery();
+
+        Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(ObservableEmitter<String> emitter) throws Exception {
+                if (mBluetoothAdapter.isDiscovering()) {
+                    mBluetoothAdapter.cancelDiscovery();
+                }
+                mBluetoothSocket.connect();
             }
-            mBluetoothSocket.connect();
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<String>() {
@@ -110,12 +115,16 @@ public class CbtClientService {
     /**
      * 发送数据
      */
-    public void sendData(List<byte[]> data, SendDataCallback callback) {
-        Observable.create((ObservableOnSubscribe<String>) emitter -> {
-            OutputStream outputStream = mBluetoothSocket.getOutputStream();
-            for (int i = 0; i < data.size(); i++) {
-                outputStream.write(data.get(i));
-                outputStream.flush();
+    public void sendData(final List<byte[]> data, final SendDataCallback callback) {
+
+        Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(ObservableEmitter<String> emitter) throws Exception {
+                OutputStream outputStream = mBluetoothSocket.getOutputStream();
+                for (int i = 0; i < data.size(); i++) {
+                    outputStream.write(data.get(i));
+                    outputStream.flush();
+                }
             }
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
