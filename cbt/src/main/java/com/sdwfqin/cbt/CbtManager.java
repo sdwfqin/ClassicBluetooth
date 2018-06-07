@@ -194,8 +194,11 @@ public class CbtManager implements BaseConfigCallback {
      */
     public void scan(ScanCallback scanCallback) {
         mScanCallback = scanCallback;
-        mDeviceList.clear();
         if (mBluetoothAdapter != null) {
+            if (mBluetoothAdapter.isDiscovering()){
+                return;
+            }
+            mDeviceList.clear();
             mScanCallback.onScanStart(mBluetoothAdapter.startDiscovery());
         }
         // 是否正在搜索
