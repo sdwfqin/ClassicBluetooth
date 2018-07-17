@@ -103,7 +103,7 @@ public class CbtClientService {
 
                     @Override
                     public void onComplete() {
-
+                        mCallBack.connectSuccess(mBluetoothSocket,mBluetoothDevice);
                     }
                 });
     }
