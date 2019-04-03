@@ -21,11 +21,7 @@ TODO：
 # 导入
 
 ```
-// 使用rxjava进行线程切换
-implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
-implementation 'io.reactivex.rxjava2:rxjava:2.1.14'
-
-implementation 'com.sdwfqin.cbt:cbt:1.0.3'
+implementation 'com.sdwfqin.cbt:cbt:1.1.0'
 ```
 
 # 使用
@@ -139,7 +135,7 @@ implementation 'com.sdwfqin.cbt:cbt:1.0.3'
         });
     ```
 
-5. 发送数据（回调接口目前是在子线程中调用）
+5. 发送数据
 
     ``` java
     byte[] data;

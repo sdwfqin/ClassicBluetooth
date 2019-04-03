@@ -33,12 +33,30 @@ import java.util.UUID;
 public class CbtManager implements BaseConfigCallback {
 
     private Application mContext;
+    /**
+     * 蓝牙适配器
+     */
     private BluetoothAdapter mBluetoothAdapter;
+    /**
+     * 蓝牙广播
+     */
     private BluetoothReceiver mBluetoothReceiver;
 
+    /**
+     * 蓝牙开关回调
+     */
     private StateSwitchCallback mStateSwitchCallback;
+    /**
+     * 扫描设备回调
+     */
     private ScanCallback mScanCallback;
+    /**
+     * 连接设备回掉
+     */
     private ConnectDeviceCallback mConnCallBack;
+    /**
+     * 蓝牙服务回调
+     */
     private ServiceListenerCallback mListenerCallback;
 
     private List<BluetoothDevice> mDeviceList = new ArrayList<>();
@@ -190,12 +208,12 @@ public class CbtManager implements BaseConfigCallback {
     /**
      * 开始搜索
      * <p>
-     * TODO: 自行判断是否开启蓝牙
+     * TODO: 自行判断是否开启蓝牙{@link CbtManager#isEnableBluetooth}
      */
     public void scan(ScanCallback scanCallback) {
         mScanCallback = scanCallback;
         if (mBluetoothAdapter != null) {
-            if (mBluetoothAdapter.isDiscovering()){
+            if (mBluetoothAdapter.isDiscovering()) {
                 return;
             }
             mDeviceList.clear();
@@ -211,8 +229,7 @@ public class CbtManager implements BaseConfigCallback {
      */
     public List<BluetoothDevice> getBondedDevices() {
         Set<BluetoothDevice> bondedDevices = mBluetoothAdapter.getBondedDevices();
-        List<BluetoothDevice> list = new ArrayList(bondedDevices);
-        return list;
+        return new ArrayList(bondedDevices);
     }
 
     /**
@@ -280,7 +297,7 @@ public class CbtManager implements BaseConfigCallback {
     /**
      * 开启蓝牙服务端
      * <p>
-     * TODO: 自行判断是否开启蓝牙
+     * TODO: 自行判断是否开启蓝牙{@link CbtManager#isEnableBluetooth}
      */
     public void startServiceListener(ServiceListenerCallback callback) {
         mListenerCallback = callback;
