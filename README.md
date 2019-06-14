@@ -21,7 +21,7 @@ TODO：
 # 导入
 
 ```
-implementation 'com.sdwfqin.cbt:cbt:1.1.0'
+implementation 'com.sdwfqin.cbt:cbt:1.1.1'
 ```
 
 # 使用

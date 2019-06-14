@@ -1,7 +1,5 @@
 package com.sdwfqin.cbt.utils;
 
-import android.support.annotation.NonNull;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
@@ -36,7 +34,7 @@ public class CbtExecutor {
                 new LinkedBlockingQueue<Runnable>(1024),
                 new ThreadFactory() {
                     @Override
-                    public Thread newThread(@NonNull Runnable r) {
+                    public Thread newThread(Runnable r) {
                         Thread thread = new Thread(r);
                         thread.setName("cbt");
                         return thread;
