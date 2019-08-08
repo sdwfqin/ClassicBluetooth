@@ -73,15 +73,16 @@ public class SendDataActivity extends AppCompatActivity {
 
         byte[] data;
         try {
-            data = (mData.getText().toString() + "\n\n\n\n\n\n").getBytes("GBK");
+            data = (mData.getText().toString() + "\n\n").getBytes("GBK");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return;
         }
 
         List<byte[]> bytes = new ArrayList<>();
-        bytes.add(BYTES[0]);
-        bytes.add(BYTES[1]);
+        // 早期打印机用
+        // bytes.add(BYTES[0]);
+        // bytes.add(BYTES[1]);
         bytes.add(data);
 
         CbtManager
